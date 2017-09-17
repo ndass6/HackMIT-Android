@@ -36,10 +36,10 @@ public class EditBucketActivity extends AppCompatActivity {
         cityImageView.setImageBitmap(bucket.getCityPicture());
 
         startDateView = (EditText) findViewById(R.id.bucket_edit_startDate);
-        startDateView.setText(dateToString(bucket.getStartDate()));
+        startDateView.setText(dateToString(bucket.getUserSetStartDate()));
 
         endDateView = (EditText) findViewById(R.id.bucket_edit_endDate);
-        endDateView.setText(dateToString(bucket.getEndDate()));
+        endDateView.setText(dateToString(bucket.getUserSetEndDate()));
 
         dayView = (EditText) findViewById(R.id.bucket_edit_days_text);
         dayView.setText(bucket.getDuration() + "");
@@ -53,8 +53,8 @@ public class EditBucketActivity extends AppCompatActivity {
                     Date startDate = simpleDateFormat.parse(startDateView.getText().toString());
                     Date endDate = simpleDateFormat.parse(endDateView.getText().toString());
 
-                    bucket.setStartDate(startDate);
-                    bucket.setEndDate(endDate);
+                    bucket.setUserSetStartDate(startDate);
+                    bucket.setUserSetEndDate(endDate);
 
                 } catch (ParseException e) {
                     return;

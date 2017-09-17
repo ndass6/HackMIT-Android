@@ -56,6 +56,7 @@ public class BucketListItemFragment extends Fragment {
             adapter = new MyBucketListItemRecyclerViewAdapter(DummyBucketListItems.ITEMS, mListener);
             recyclerView.setAdapter(adapter);
         }
+
         return view;
     }
 

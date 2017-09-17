@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
                 Log.i("place", "Place: " + place.getName());
 
                 // TODO api call
-                final BucketListItem bucketListItem = DummyBucketListItems.createDummyItem(place);
+                final BucketListItem bucketListItem = new BucketListItem();
 
                 final String placeId = place.getId();
                 final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
@@ -133,6 +133,13 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
                                 bucketListItem.setCityPicture(bitmap);
 
                                 // Update the recycler view
+//                                DummyBucketListItems.addItem(bucketListItem);
+//                                bucketListItemFragment.addNewItem();
+
+                                // Go to the edit activity
+                                EditBucketActivity.bucket = bucketListItem;
+                                Intent intent = new Intent(MainActivity.this, EditBucketActivity.class);
+                                startActivity(intent);
                                 DummyBucketListItems.addItem(bucketListItem);
                                 bucketListItemFragment.addNewItem();
                             }
