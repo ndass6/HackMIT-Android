@@ -93,6 +93,6 @@ public class BucketListItemFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(BucketListItem item);
+        void onListFragmentInteraction(BucketListItem item, boolean edit);
     }
 }

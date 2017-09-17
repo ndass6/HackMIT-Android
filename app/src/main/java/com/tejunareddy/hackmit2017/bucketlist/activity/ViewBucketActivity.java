@@ -1,5 +1,6 @@
 package com.tejunareddy.hackmit2017.bucketlist.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -42,7 +43,9 @@ public class ViewBucketActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO
+                Intent intent = new Intent(ViewBucketActivity.this, EditBucketActivity.class);
+                EditBucketActivity.bucket = bucket;
+                startActivity(intent);
             }
         });
 

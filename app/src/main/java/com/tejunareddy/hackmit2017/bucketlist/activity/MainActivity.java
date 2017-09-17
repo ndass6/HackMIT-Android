@@ -176,13 +176,16 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
     }
 
     @Override
-    public void onListFragmentInteraction(BucketListItem item) {
-        Intent intent = new Intent(this, ViewBucketActivity.class);
-
-        // FIXME
-        ViewBucketActivity.setBucket(item);
-
-        startActivity(intent);
+    public void onListFragmentInteraction(BucketListItem item, boolean edit) {
+        if (!edit) {
+            Intent intent = new Intent(this, ViewBucketActivity.class);
+            ViewBucketActivity.setBucket(item);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, EditBucketActivity.class);
+            ViewBucketActivity.setBucket(item);
+            startActivity(intent);
+        }
     }
 
     /**
