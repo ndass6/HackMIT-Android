@@ -14,8 +14,7 @@ public class BucketListItem {
     private Date endDate;
     private Date userSetStartDate;
     private Date userSetEndDate;
-    private int minDuration;
-    private int maxDuration;
+    private int duration;
     private Bitmap cityPicture;
     private boolean alert;
     private int price;
@@ -80,20 +79,12 @@ public class BucketListItem {
         this.endDate = endDate;
     }
 
-    public int getMinDuration() {
-        return minDuration;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setMinDuration(int minDuration) {
-        this.minDuration = minDuration;
-    }
-
-    public int getMaxDuration() {
-        return maxDuration;
-    }
-
-    public void setMaxDuration(int maxDuration) {
-        this.maxDuration = maxDuration;
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public Bitmap getCityPicture() {

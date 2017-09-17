@@ -43,7 +43,7 @@ public class ViewBucketActivity extends AppCompatActivity {
 
         FragmentManager fm = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.bucket_view_frame, FlightFragment.newInstance());
+        fragmentTransaction.replace(R.id.bucket_view_frame, FlightFragment.newInstance(bucket));
         fragmentTransaction.commit();
 
     }

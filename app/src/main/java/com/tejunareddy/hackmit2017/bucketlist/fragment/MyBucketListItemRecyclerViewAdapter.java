@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.tejunareddy.hackmit2017.bucketlist.R;
 import com.tejunareddy.hackmit2017.bucketlist.fragment.BucketListItemFragment.OnListFragmentInteractionListener;
-import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyContent;
+import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyBucketListItems;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
 
 import java.text.SimpleDateFormat;
@@ -78,7 +78,7 @@ public class MyBucketListItemRecyclerViewAdapter extends RecyclerView.Adapter<My
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DummyContent.remove(position);
+                DummyBucketListItems.remove(position);
                 notifyItemRemoved(position);
             }
         });

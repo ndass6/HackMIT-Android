@@ -12,7 +12,6 @@ public class Flight {
     private int price;
     private String departAirport;
     private String arrivalAirport;
-    private String arriveAirport;
 
     public Date getDepartDate() {
         return departDate;
@@ -36,14 +35,6 @@ public class Flight {
 
     public void setDepartAirport(String departAirport) {
         this.departAirport = departAirport;
-    }
-
-    public String getArriveAirport() {
-        return arriveAirport;
-    }
-
-    public void setArriveAirport(String arriveAirport) {
-        this.arriveAirport = arriveAirport;
     }
 
     public int getPrice() {

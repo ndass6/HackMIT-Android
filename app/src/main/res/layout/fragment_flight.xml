@@ -9,26 +9,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="@drawable/scrim"
+        android:background="@color/colorAccent"
+        app:cardBackgroundColor="@color/colorAccent"
         android:translationZ="@dimen/cardview_default_elevation"
         app:cardCornerRadius="5dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
 
             <ImageView
-                android:id="@+id/bucketlist_picture"
-                android:layout_width="match_parent"
+                android:id="@+id/flight_icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_flight_black_24dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:adjustViewBounds="true"
-                android:maxHeight="150dp"
-                android:minHeight="150dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/flight"/>
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/flight_airline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/flight_icon"
+                android:text="$Airline Flight"
+                android:textSize="18sp"
+                android:layout_marginLeft="28dp"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/flight_price_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/flight_airline"
+                android:text="$date for $price"
+                android:textSize="18sp"
+                android:layout_alignLeft="@id/flight_airline"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/flight_depart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/flight_price_date"
+                android:text="$departCity -> $arrivalCity"
+                android:textSize="18sp"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/white"/>
 
         </RelativeLayout>
 

@@ -3,6 +3,7 @@ package com.tejunareddy.hackmit2017.bucketlist.fragment.dummy;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
+import com.tejunareddy.hackmit2017.bucketlist.model.Flight;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.List;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class DummyContent {
+public class DummyBucketListItems {
 
     /**
      * An array of sample (dummy) items.
@@ -34,11 +35,19 @@ public class DummyContent {
         bucketListItem.setEndCity(place.getName().toString());
         bucketListItem.setEndDate(new Date());
         bucketListItem.setStartDate(new Date());
-        bucketListItem.setMaxDuration(5);
-        bucketListItem.setMinDuration(3);
+        bucketListItem.setDuration(3);
         bucketListItem.setPrice(100);
         bucketListItem.setStarred(false);
         bucketListItem.setPlaceId(place.getId());
+
+        List<Flight> flights = new ArrayList<>();
+        Flight flight = new Flight();
+        flight.setAirline("Delta");
+        flight.setArrivalAirport("Atlanta");
+        flight.setDepartAirport(place.getName().toString());
+        flight.setDepartDate(new Date());
+        flight.setPrice(50);
+        bucketListItem.setFlightInfo(flights);
 
         return bucketListItem;
     }

@@ -34,7 +34,7 @@ import com.google.android.gms.tasks.Task;
 import com.tejunareddy.hackmit2017.bucketlist.R;
 import com.tejunareddy.hackmit2017.bucketlist.fragment.BucketListItemFragment;
 import com.tejunareddy.hackmit2017.bucketlist.fragment.PlaceholderFragment;
-import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyContent;
+import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyBucketListItems;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
 
 public class MainActivity extends AppCompatActivity implements BucketListItemFragment.OnListFragmentInteractionListener {
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
                 Log.i("place", "Place: " + place.getName());
 
                 // TODO api call
-                final BucketListItem bucketListItem = DummyContent.createDummyItem(place);
+                final BucketListItem bucketListItem = DummyBucketListItems.createDummyItem(place);
 
                 final String placeId = place.getId();
                 final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
                                 bucketListItem.setCityPicture(bitmap);
 
                                 // Update the recycler view
-                                DummyContent.addItem(bucketListItem);
+                                DummyBucketListItems.addItem(bucketListItem);
                                 bucketListItemFragment.addNewItem();
                             }
                         });

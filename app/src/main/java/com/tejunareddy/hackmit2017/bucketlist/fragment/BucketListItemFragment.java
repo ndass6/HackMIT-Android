@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tejunareddy.hackmit2017.bucketlist.R;
-import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyContent;
+import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyBucketListItems;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
 
 /**
@@ -53,7 +53,7 @@ public class BucketListItemFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new MyBucketListItemRecyclerViewAdapter(DummyContent.ITEMS, mListener);
+            adapter = new MyBucketListItemRecyclerViewAdapter(DummyBucketListItems.ITEMS, mListener);
             recyclerView.setAdapter(adapter);
         }
         return view;
