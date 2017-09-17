@@ -75,7 +75,7 @@ public class EditBucketActivity extends AppCompatActivity {
 
                 bucket.setDuration(Integer.parseInt(dayView.getText().toString()));
 
-                SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
                 // TODO save item to api
                 OkHttpClient client = new OkHttpClient();

@@ -13,6 +13,8 @@ import com.tejunareddy.hackmit2017.bucketlist.R;
 import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyBucketListItems;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
 
+import java.util.List;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -25,6 +27,8 @@ public class BucketListItemFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private MyBucketListItemRecyclerViewAdapter adapter;
 
+    private List<BucketListItem> items;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -33,8 +37,9 @@ public class BucketListItemFragment extends Fragment {
     }
 
     // TODO: Customize parameter initialization
-    public static BucketListItemFragment newInstance() {
+    public static BucketListItemFragment newInstance(List<BucketListItem> items) {
         BucketListItemFragment fragment = new BucketListItemFragment();
+        fragment.items = items;
         return fragment;
     }
 
@@ -53,7 +58,7 @@ public class BucketListItemFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new MyBucketListItemRecyclerViewAdapter(DummyBucketListItems.ITEMS, mListener);
+            adapter = new MyBucketListItemRecyclerViewAdapter(items, mListener);
             recyclerView.setAdapter(adapter);
         }
 

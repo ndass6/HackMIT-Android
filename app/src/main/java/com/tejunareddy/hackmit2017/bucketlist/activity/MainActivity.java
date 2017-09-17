@@ -218,11 +218,11 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0) {
-                bucketListItemFragment = BucketListItemFragment.newInstance();
+                bucketListItemFragment = BucketListItemFragment.newInstance(DummyBucketListItems.ITEMS);
                 return bucketListItemFragment;
             }
 
-            return PlaceholderFragment.newInstance(position + 1);
+            return BucketListItemFragment.newInstance(DummyBucketListItems.SUGGESTIONS);
         }
 
         @Override

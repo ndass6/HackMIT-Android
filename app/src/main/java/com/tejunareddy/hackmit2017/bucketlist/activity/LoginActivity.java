@@ -160,88 +160,23 @@ public class LoginActivity extends AppCompatActivity {
                             LoginActivity.userId = jsonObject.getInt("user_id");
 
                             OkHttpClient client = new OkHttpClient();
+                            Request request2 = new Request.Builder()
+                                    .url("http://hackmit2017.pythonanywhere.com/user/" + LoginActivity.userId + "/recommendation")
+                                    .get()
+                                    .build();
+
+                            CustomCallback callback2 = new CustomCallback();
+                            callback2.setRec(true);
+                            client.newCall(request2).enqueue(callback2);
+
                             Request request = new Request.Builder()
                                     .url("http://hackmit2017.pythonanywhere.com/user/" + LoginActivity.userId + "/bucket-list")
                                     .get()
                                     .build();
 
-                            client.newCall(request).enqueue(new Callback() {
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                                @Override
-                                public void onResponse(Call call, Response response) throws IOException {
-                                    try (ResponseBody responseBody = response.body()) {
-                                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                                        JSONObject jsonObject = new JSONObject(responseBody.string());
-                                        final JSONArray results = jsonObject.getJSONArray("results");
-                                        final int[] count = {0};
-                                        for (int i = 0; i < results.length(); i++) {
-                                            count[0] = i;
-                                            JSONObject result = results.getJSONObject(i);
-                                            int duration = result.getInt("duration");
-                                            String endCity = result.getString("end_city");
-
-                                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                                            try {
-                                                Date endDate = simpleDateFormat.parse(result.getString("end_date"));
-                                                Date startDate = simpleDateFormat.parse(result.getString("start_date"));
-
-                                                final BucketListItem bucketListItem = new BucketListItem();
-                                                bucketListItem.setDuration(duration);
-                                                bucketListItem.setEndCity(endCity);
-                                                bucketListItem.setUserSetEndDate(endDate);
-                                                bucketListItem.setUserSetStartDate(startDate);
-
-                                                // TODO picture
-
-                                                if (!result.has("place_id")) {
-                                                    doNext(bucketListItem, count, results.length());
-                                                } else {
-                                                    String placeId = result.getString("place_id");
-
-                                                    final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
-                                                    photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-                                                            // Get the list of photos.
-                                                            PlacePhotoMetadataResponse photos = task.getResult();
-                                                            // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-                                                            PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                                                            // Get the first photo in the list.
-                                                            PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-                                                            // Get the attribution text.
-                                                            CharSequence attribution = photoMetadata.getAttributions();
-                                                            // Get a full-size bitmap for the photo.
-                                                            Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-                                                            photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                                                                    PlacePhotoResponse photo = task.getResult();
-                                                                    Bitmap bitmap = photo.getBitmap();
-                                                                    bucketListItem.setCityPicture(bitmap);
-
-
-                                                                    doNext(bucketListItem, count, results.length());
-                                                                }
-                                                            });
-                                                        }
-                                                    });
-                                                }
-
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
+                            CustomCallback callback1 = new CustomCallback();
+                            callback1.setRec(false);
+                            client.newCall(request).enqueue(callback1);
 
                         } else {
                             runOnUiThread(new Runnable() {
@@ -260,6 +195,95 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
     }
+
+    public class CustomCallback implements Callback {
+
+        public boolean isRec = false;
+        public void setRec(boolean rec) {
+            isRec = rec;
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onResponse(final Call call, Response response) throws IOException {
+            try (ResponseBody responseBody = response.body()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                JSONObject jsonObject = new JSONObject(responseBody.string());
+                final JSONArray results = jsonObject.getJSONArray("results");
+                final int[] count = {0};
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject result = results.getJSONObject(i);
+                    int duration = result.getInt("duration");
+                    String endCity = result.getString("end_city");
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                    try {
+                        Date endDate = simpleDateFormat.parse(result.getString("end_date"));
+                        Date startDate = simpleDateFormat.parse(result.getString("start_date"));
+
+                        final BucketListItem bucketListItem = new BucketListItem();
+                        bucketListItem.setDuration(duration);
+                        bucketListItem.setEndCity(endCity);
+                        bucketListItem.setUserSetEndDate(endDate);
+                        bucketListItem.setUserSetStartDate(startDate);
+
+                        // Picture
+                        if (!result.has("place_id")) {
+                            if (isRec) {
+                                DummyBucketListItems.addSuggestion(bucketListItem);
+                            } else {
+                                doNext(bucketListItem, count, results.length());
+                            }
+                        } else {
+                            String placeId = result.getString("place_id");
+
+                            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+                            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+                                @Override
+                                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                                    // Get the list of photos.
+                                    PlacePhotoMetadataResponse photos = task.getResult();
+                                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                                    // Get the first photo in the list.
+                                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                                    // Get the attribution text.
+                                    CharSequence attribution = photoMetadata.getAttributions();
+                                    // Get a full-size bitmap for the photo.
+                                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                                            PlacePhotoResponse photo = task.getResult();
+                                            Bitmap bitmap = photo.getBitmap();
+                                            bucketListItem.setCityPicture(bitmap);
+
+                                            if (isRec) {
+                                                DummyBucketListItems.addSuggestion(bucketListItem);
+                                            } else {
+                                                doNext(bucketListItem, count, results.length());
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     private void doNext(final BucketListItem bucketListItem, final int[] count, final int max) {
 
@@ -330,6 +354,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Note this is before the transition to the main activity
                         // Go to the next activity here
                         // pass in user id
+                        count[0]++;
                         if (count[0] == max - 1) {
                             runOnUiThread(new Runnable() {
                                 @Override

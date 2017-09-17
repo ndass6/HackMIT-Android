@@ -21,36 +21,15 @@ public class DummyBucketListItems {
      * An array of sample (dummy) items.
      */
     public static final List<BucketListItem> ITEMS = new ArrayList<BucketListItem>();
-    private static final int COUNT = 25;
-    private GoogleApiClient mGoogleApiClient;
+
+    public static final List<BucketListItem> SUGGESTIONS = new ArrayList<>();
 
     public static void addItem(BucketListItem item) {
         ITEMS.add(item);
     }
 
-    public static BucketListItem createDummyItem(Place place) {
-        BucketListItem bucketListItem = new BucketListItem();
-        bucketListItem.setAlert(true);
-        bucketListItem.setCityPicture(null);
-        bucketListItem.setEndCity(place.getName().toString());
-        bucketListItem.setEndDate(new Date());
-        bucketListItem.setStartDate(new Date());
-        bucketListItem.setDuration(3);
-        bucketListItem.setPrice(100);
-        bucketListItem.setStarred(false);
-        bucketListItem.setPlaceId(place.getId());
-
-        List<Flight> flights = new ArrayList<>();
-        Flight flight = new Flight();
-        flight.setAirline("Delta");
-        flight.setArrivalAirport("Atlanta");
-        flight.setDepartAirport(place.getName().toString());
-        flight.setDepartDate(new Date());
-        flight.setPrice(50);
-        flights.add(flight);
-        bucketListItem.setFlightInfo(flights);
-
-        return bucketListItem;
+    public static void addSuggestion(BucketListItem item) {
+        SUGGESTIONS.add(item);
     }
 
     public static void remove(int index) {
