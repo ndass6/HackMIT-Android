@@ -68,8 +68,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/bucket_days_input"
@@ -82,6 +82,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="8dp"
                     android:hint="Length of Vacation (Days)"
+                    android:inputType="number"
                     android:text=""
                     android:textSize="24sp"/>
 
@@ -90,10 +91,10 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/bucket_start_input"
-                android:layout_alignRight="@id/bucket_days_input"
-                android:layout_toEndOf="@id/bucket_days_input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/bucket_days_input"
+                android:layout_toEndOf="@id/bucket_days_input">
 
                 <EditText
                     android:id="@+id/bucket_edit_startDate"
@@ -101,6 +102,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="8dp"
                     android:hint="Departure Date"
+                    android:inputType="date"
                     android:text=""
                     android:textSize="24sp"/>
             </android.support.design.widget.TextInputLayout>
@@ -116,6 +118,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="8dp"
                     android:hint="Return Date"
+                    android:inputType="date"
                     android:text=""
                     android:textSize="24sp"/>
             </android.support.design.widget.TextInputLayout>
@@ -125,7 +128,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/bucket_view_fab"
+        android:id="@+id/bucket_edit_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
