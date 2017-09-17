@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
                                 int cost = (int) flightCost;
                                 flight1.setPrice(cost);
                                 if (cost == -1) {
-                                    flight1.setPrice((new Random()).nextInt(500) + 100);
+                                    cost = (new Random()).nextInt(500) + 100;
                                 }
                                 price += cost;
                                 flight1.setDepartDate(simpleDateFormat.parse(flightJson.getString("departure_date")));
