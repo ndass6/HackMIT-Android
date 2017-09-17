@@ -228,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(responseBody.string());
                         if (false && jsonObject.has("success") && jsonObject.getBoolean("success")) {
                             bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
-                            bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("end_date")));
+                            bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
 
                             List<Flight> flights = new ArrayList<Flight>();
                             JSONObject departureFlightJson = jsonObject.getJSONObject("departure_flight");
