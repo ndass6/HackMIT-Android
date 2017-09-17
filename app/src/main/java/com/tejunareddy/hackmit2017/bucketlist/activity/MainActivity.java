@@ -159,6 +159,12 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bucketListItemFragment.notifyChange();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

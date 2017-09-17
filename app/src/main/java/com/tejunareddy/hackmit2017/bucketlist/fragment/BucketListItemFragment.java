@@ -64,6 +64,10 @@ public class BucketListItemFragment extends Fragment {
         adapter.notifyItemInserted(adapter.getItemCount() + 1);
     }
 
+    public void notifyChange() {
+        adapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onAttach(Context context) {

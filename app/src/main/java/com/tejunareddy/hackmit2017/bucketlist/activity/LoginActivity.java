@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -262,7 +263,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doNext(final BucketListItem bucketListItem, final int[] count, final int max) {
 
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd", Locale.US);
         try {
             String startCity = URLEncoder.encode(LoginActivity.startCity, "UTF-8");
             String endCity = URLEncoder.encode(bucketListItem.getEndCity(), "UTF-8");
