@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
-                Log.i("place", "Place: " + place.getName());
+                Log.i("place", "Place: " + place.getName() + " with id " + place.getId());
 
                 // TODO api call
                 final BucketListItem bucketListItem = new BucketListItem();
