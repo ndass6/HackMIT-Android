@@ -110,6 +110,9 @@ public class EditBucketActivity extends AppCompatActivity {
     }
 
     private String dateToString(Date date) {
+        if (date == null) {
+            date = new Date();
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy", Locale.US);
         return simpleDateFormat.format(date);
     }

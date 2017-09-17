@@ -226,31 +226,34 @@ public class LoginActivity extends AppCompatActivity {
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                         JSONObject jsonObject = new JSONObject(responseBody.string());
-                        if (false && jsonObject.has("success") && jsonObject.getBoolean("success")) {
-                            bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
-                            bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
+                        if (jsonObject.has("results")) {
 
                             List<Flight> flights = new ArrayList<Flight>();
-                            JSONObject departureFlightJson = jsonObject.getJSONObject("departure_flight");
-                            Flight flight1 = new Flight();
-                            flight1.setPrice(Integer.parseInt(departureFlightJson.getString("price").split(".")[0]));
-                            flight1.setDepartDate(simpleDateFormat.parse(departureFlightJson.getString("departure_date")));
-                            flight1.setArrivalAirport(departureFlightJson.getString("destination"));
-                            flight1.setAirline(departureFlightJson.getString("airline"));
-                            flights.add(flight1);
+                            JSONArray results = jsonObject.getJSONArray("results");
+                            int price = 0;
+                            String departure = "Atlanta";
+                            for (int i = 0; i < results.length(); i++) {
+                                JSONObject flightJson = results.getJSONObject(i);
+                                Flight flight1 = new Flight();
+                                int cost = Integer.parseInt(flightJson.getString("price").split(".")[0]);
+                                flight1.setPrice(cost);
+                                price += cost;
+                                flight1.setDepartDate(simpleDateFormat.parse(flightJson.getString("departure_date")));
+                                flight1.setDepartAirport(departure);
+                                flight1.setArrivalAirport(flightJson.getString("destination"));
+                                departure = flight1.getArrivalAirport();
+                                flight1.setAirline(flightJson.getString("airline"));
+                                flights.add(flight1);
 
-                            JSONObject returnFlightJson = jsonObject.getJSONObject("return_flight");
-                            Flight flight2 = new Flight();
-                            flight2.setPrice(Integer.parseInt(returnFlightJson.getString("price").split(".")[0]));
-                            flight2.setDepartDate(simpleDateFormat.parse(returnFlightJson.getString("departure_date")));
-                            flight2.setArrivalAirport(returnFlightJson.getString("destination"));
-                            flight2.setAirline(returnFlightJson.getString("airline"));
-                            flights.add(flight2);
+                                if (i == 1) {
+                                    bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
+                                } else if (i == 2) {
+                                    bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
 
-                            flight1.setDepartAirport(returnFlightJson.getString("destination"));
-                            flight2.setDepartAirport(departureFlightJson.getString("destination"));
+                                }
+                            }
 
-                            bucketListItem.setPrice(flight1.getPrice() + flight2.getPrice());
+                            bucketListItem.setPrice(price);
                             bucketListItem.setFlightInfo(flights);
                         } else {
                             bucketListItem.setStartDate(new Date());

@@ -133,15 +133,13 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
                                 bucketListItem.setCityPicture(bitmap);
 
                                 // Update the recycler view
-//                                DummyBucketListItems.addItem(bucketListItem);
-//                                bucketListItemFragment.addNewItem();
+                                DummyBucketListItems.addItem(bucketListItem);
+                                bucketListItemFragment.addNewItem();
 
                                 // Go to the edit activity
                                 EditBucketActivity.bucket = bucketListItem;
                                 Intent intent = new Intent(MainActivity.this, EditBucketActivity.class);
                                 startActivity(intent);
-                                DummyBucketListItems.addItem(bucketListItem);
-                                bucketListItemFragment.addNewItem();
                             }
                         });
                     }

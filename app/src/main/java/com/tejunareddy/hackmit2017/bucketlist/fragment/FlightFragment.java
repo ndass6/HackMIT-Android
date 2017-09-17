@@ -13,8 +13,6 @@ import com.tejunareddy.hackmit2017.bucketlist.R;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
 import com.tejunareddy.hackmit2017.bucketlist.model.Flight;
 
-import java.util.List;
-
 /**
  * A fragment representing a list of Items.
  * <p/>
