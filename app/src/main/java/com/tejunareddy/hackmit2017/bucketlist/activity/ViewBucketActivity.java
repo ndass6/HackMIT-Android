@@ -53,7 +53,7 @@ public class ViewBucketActivity extends AppCompatActivity {
         cityImageView.setImageBitmap(bucket.getCityPicture());
 
         priceView = (TextView) findViewById(R.id.bucket_view_price);
-        priceView.setText("Best Price: " + bucket.getPrice());
+        priceView.setText("Best Price: $" + bucket.getPrice());
 
         startDateView = (TextView) findViewById(R.id.bucket_view_startDate);
         startDateView.setText("Depart Date: " + dateToString(bucket.getStartDate()));
