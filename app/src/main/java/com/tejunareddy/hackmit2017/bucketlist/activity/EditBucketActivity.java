@@ -29,20 +29,20 @@ public class EditBucketActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_bucket);
-        CollapsingToolbarLayout toolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        CollapsingToolbarLayout toolbar = (CollapsingToolbarLayout) findViewById(R.id.edit_collapsing_toolbar);
         toolbar.setTitle(bucket.getEndCity());
 
-        cityImageView = (ImageView) findViewById(R.id.bucket_view_image);
+        cityImageView = (ImageView) findViewById(R.id.bucket_edit_image);
         cityImageView.setImageBitmap(bucket.getCityPicture());
-
-        dayView = (EditText) findViewById(R.id.bucket_edit_days);
-        dayView.setText(bucket.getDuration());
 
         startDateView = (EditText) findViewById(R.id.bucket_edit_startDate);
         startDateView.setText(dateToString(bucket.getStartDate()));
 
         endDateView = (EditText) findViewById(R.id.bucket_edit_endDate);
         endDateView.setText(dateToString(bucket.getEndDate()));
+
+        dayView = (EditText) findViewById(R.id.bucket_edit_days_text);
+        dayView.setText(bucket.getDuration() + "");
 
         fab = (FloatingActionButton) findViewById(R.id.bucket_edit_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +54,7 @@ public class EditBucketActivity extends AppCompatActivity {
                     Date endDate = simpleDateFormat.parse(endDateView.getText().toString());
 
                     bucket.setStartDate(startDate);
-                    bucket.setStartDate(endDate);
+                    bucket.setEndDate(endDate);
 
                 } catch (ParseException e) {
                     return;

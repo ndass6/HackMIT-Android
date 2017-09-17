@@ -14,9 +14,9 @@ public class BucketListItem {
     private Date endDate;
     private Date userSetStartDate;
     private Date userSetEndDate;
-    private int duration;
+    private int duration = 1;
     private Bitmap cityPicture;
-    private boolean alert;
+    private boolean alert = false;
     private int price;
     private boolean starred = false;
     private List<PlaceOfInterest> placesOfInterest;

@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
             startActivity(intent);
         } else {
             Intent intent = new Intent(this, EditBucketActivity.class);
-            ViewBucketActivity.setBucket(item);
+            EditBucketActivity.bucket = item;
             startActivity(intent);
         }
     }
