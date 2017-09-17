@@ -32,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -261,80 +263,87 @@ public class LoginActivity extends AppCompatActivity {
     private void doNext(final BucketListItem bucketListItem, final int[] count, final int max) {
 
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        try {
+            String startCity = URLEncoder.encode(LoginActivity.startCity, "UTF-8");
+            String endCity = URLEncoder.encode(bucketListItem.getEndCity(), "UTF-8");
 
-        // best route api
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("http://hackmit2017.pythonanywhere.com/calculate-price?start_city=" + LoginActivity.startCity
-                        + "&end_city=" + bucketListItem.getEndCity()
-                        + "&start_date=" + simpleDateFormat.format(bucketListItem.getUserSetStartDate())
-                        + "&end_date=" + simpleDateFormat.format(bucketListItem.getUserSetEndDate())
-                        + "&duration=" + bucketListItem.getDuration())
-                .get()
-                .build();
+            // best route api
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://hackmit2017.pythonanywhere.com/calculate-price?start_city=" + startCity
+                            + "&end_city=" + endCity
+                            + "&start_date=" + simpleDateFormat.format(bucketListItem.getUserSetStartDate())
+                            + "&end_date=" + simpleDateFormat.format(bucketListItem.getUserSetEndDate())
+                            + "&duration=" + bucketListItem.getDuration())
+                    .get()
+                    .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                    JSONObject jsonObject = new JSONObject(responseBody.string());
-                    bucketListItem.setDuration(Integer.parseInt(jsonObject.getString("duration")));
-                    bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
-                    bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("end_date")));
-
-                    List<Flight> flights = new ArrayList<Flight>();
-                    JSONObject departureFlightJson = jsonObject.getJSONObject("departure_flight");
-                    Flight flight1 = new Flight();
-                    flight1.setPrice(Integer.parseInt(departureFlightJson.getString("price").split(".")[0]));
-                    flight1.setDepartDate(simpleDateFormat.parse(departureFlightJson.getString("departure_date")));
-                    flight1.setArrivalAirport(departureFlightJson.getString("destination"));
-                    flight1.setAirline(departureFlightJson.getString("airline"));
-                    flights.add(flight1);
-
-                    JSONObject returnFlightJson = jsonObject.getJSONObject("return_flight");
-                    Flight flight2 = new Flight();
-                    flight2.setPrice(Integer.parseInt(returnFlightJson.getString("price").split(".")[0]));
-                    flight2.setDepartDate(simpleDateFormat.parse(returnFlightJson.getString("departure_date")));
-                    flight2.setArrivalAirport(returnFlightJson.getString("destination"));
-                    flight2.setAirline(returnFlightJson.getString("airline"));
-                    flights.add(flight2);
-
-                    flight1.setDepartAirport(returnFlightJson.getString("destination"));
-                    flight2.setDepartAirport(departureFlightJson.getString("destination"));
-
-                    bucketListItem.setPrice(flight1.getPrice() + flight2.getPrice());
-                    bucketListItem.setFlightInfo(flights);
-                    // Do the rest of the stuff
-                    DummyBucketListItems.addItem(bucketListItem);
-
-                    // Note this is before the transition to the main activity
-                    // Go to the next activity here
-                    // pass in user id
-                    if (count[0] == max - 1) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showProgress(false);
-                            }
-                        });
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try (ResponseBody responseBody = response.body()) {
+                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                        JSONObject jsonObject = new JSONObject(responseBody.string());
+                        bucketListItem.setDuration(Integer.parseInt(jsonObject.getString("duration")));
+                        bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
+                        bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("end_date")));
+
+                        List<Flight> flights = new ArrayList<Flight>();
+                        JSONObject departureFlightJson = jsonObject.getJSONObject("departure_flight");
+                        Flight flight1 = new Flight();
+                        flight1.setPrice(Integer.parseInt(departureFlightJson.getString("price").split(".")[0]));
+                        flight1.setDepartDate(simpleDateFormat.parse(departureFlightJson.getString("departure_date")));
+                        flight1.setArrivalAirport(departureFlightJson.getString("destination"));
+                        flight1.setAirline(departureFlightJson.getString("airline"));
+                        flights.add(flight1);
+
+                        JSONObject returnFlightJson = jsonObject.getJSONObject("return_flight");
+                        Flight flight2 = new Flight();
+                        flight2.setPrice(Integer.parseInt(returnFlightJson.getString("price").split(".")[0]));
+                        flight2.setDepartDate(simpleDateFormat.parse(returnFlightJson.getString("departure_date")));
+                        flight2.setArrivalAirport(returnFlightJson.getString("destination"));
+                        flight2.setAirline(returnFlightJson.getString("airline"));
+                        flights.add(flight2);
+
+                        flight1.setDepartAirport(returnFlightJson.getString("destination"));
+                        flight2.setDepartAirport(departureFlightJson.getString("destination"));
+
+                        bucketListItem.setPrice(flight1.getPrice() + flight2.getPrice());
+                        bucketListItem.setFlightInfo(flights);
+                        // Do the rest of the stuff
+                        DummyBucketListItems.addItem(bucketListItem);
+
+                        // Note this is before the transition to the main activity
+                        // Go to the next activity here
+                        // pass in user id
+                        if (count[0] == max - 1) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showProgress(false);
+                                }
+                            });
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isEmailValid(String email) {
