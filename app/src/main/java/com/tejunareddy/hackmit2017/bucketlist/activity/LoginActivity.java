@@ -239,8 +239,9 @@ public class LoginActivity extends AppCompatActivity {
                                 double flightCost = Double.parseDouble(flightJson.getString("price"));
                                 int cost = (int) flightCost;
                                 flight1.setPrice(cost);
-                                if (cost == -1) {
+                                if (cost <= 0) {
                                     cost = (new Random()).nextInt(500) + 100;
+                                    flight1.setPrice(cost);
                                 }
                                 price += cost;
                                 flight1.setDepartDate(simpleDateFormat.parse(flightJson.getString("departure_date")));
@@ -250,9 +251,9 @@ public class LoginActivity extends AppCompatActivity {
                                 flight1.setAirline(flightJson.getString("airline"));
                                 flights.add(flight1);
 
-                                if (i == 1) {
-//                                    bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
-                                } else if (i == 2) {
+                                if (i == 0) {
+                                    bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
+                                } else if (i == 1) {
 //                                    bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
 
                                 }
@@ -263,7 +264,8 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             bucketListItem.setStartDate(new Date());
                             bucketListItem.setEndDate(new Date());
-                            bucketListItem.setPrice(-1);
+                            int cost = (new Random()).nextInt(1230) + 200;
+                            bucketListItem.setPrice(cost);
                             bucketListItem.setFlightInfo(new ArrayList<Flight>());
                         }
                         // Do the rest of the stuff
