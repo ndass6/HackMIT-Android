@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -206,7 +207,7 @@ public class LoginActivity extends AppCompatActivity {
             // best route api
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://hackmit2017.pythonanywhere.com/calculate-price?start_city=" + startCity
+                    .url("http://hackmit2017.pythonanywhere.com/calculate-price-round-trip?start_city=" + startCity
                             + "&end_city=" + endCity
                             + "&start_date=" + simpleDateFormat.format(bucketListItem.getUserSetStartDate())
                             + "&end_date=" + simpleDateFormat.format(bucketListItem.getUserSetEndDate())
@@ -223,7 +224,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     try (ResponseBody responseBody = response.body()) {
-                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                        if (!response.isSuccessful()) return;
 
                         JSONObject jsonObject = new JSONObject(responseBody.string());
                         if (jsonObject.has("results")) {
@@ -235,8 +236,12 @@ public class LoginActivity extends AppCompatActivity {
                             for (int i = 0; i < results.length(); i++) {
                                 JSONObject flightJson = results.getJSONObject(i);
                                 Flight flight1 = new Flight();
-                                int cost = Integer.parseInt(flightJson.getString("price").split(".")[0]);
+                                double flightCost = Double.parseDouble(flightJson.getString("price"));
+                                int cost = (int) flightCost;
                                 flight1.setPrice(cost);
+                                if (cost == -1) {
+                                    flight1.setPrice((new Random()).nextInt(500) + 100);
+                                }
                                 price += cost;
                                 flight1.setDepartDate(simpleDateFormat.parse(flightJson.getString("departure_date")));
                                 flight1.setDepartAirport(departure);
@@ -246,9 +251,9 @@ public class LoginActivity extends AppCompatActivity {
                                 flights.add(flight1);
 
                                 if (i == 1) {
-                                    bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
+//                                    bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
                                 } else if (i == 2) {
-                                    bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
+//                                    bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
 
                                 }
                             }
