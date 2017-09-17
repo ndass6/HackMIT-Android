@@ -196,95 +196,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public class CustomCallback implements Callback {
-
-        public boolean isRec = false;
-        public void setRec(boolean rec) {
-            isRec = rec;
-        }
-
-        @Override
-        public void onFailure(Call call, IOException e) {
-            e.printStackTrace();
-        }
-
-        @Override
-        public void onResponse(final Call call, Response response) throws IOException {
-            try (ResponseBody responseBody = response.body()) {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                JSONObject jsonObject = new JSONObject(responseBody.string());
-                final JSONArray results = jsonObject.getJSONArray("results");
-                final int[] count = {0};
-                for (int i = 0; i < results.length(); i++) {
-                    JSONObject result = results.getJSONObject(i);
-                    int duration = result.getInt("duration");
-                    String endCity = result.getString("end_city");
-
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                    try {
-                        Date endDate = simpleDateFormat.parse(result.getString("end_date"));
-                        Date startDate = simpleDateFormat.parse(result.getString("start_date"));
-
-                        final BucketListItem bucketListItem = new BucketListItem();
-                        bucketListItem.setDuration(duration);
-                        bucketListItem.setEndCity(endCity);
-                        bucketListItem.setUserSetEndDate(endDate);
-                        bucketListItem.setUserSetStartDate(startDate);
-
-                        // Picture
-                        if (!result.has("place_id")) {
-                            if (isRec) {
-                                DummyBucketListItems.addSuggestion(bucketListItem);
-                            } else {
-                                doNext(bucketListItem, count, results.length());
-                            }
-                        } else {
-                            String placeId = result.getString("place_id");
-
-                            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
-                            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-                                @Override
-                                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-                                    // Get the list of photos.
-                                    PlacePhotoMetadataResponse photos = task.getResult();
-                                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-                                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                                    // Get the first photo in the list.
-                                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-                                    // Get the attribution text.
-                                    CharSequence attribution = photoMetadata.getAttributions();
-                                    // Get a full-size bitmap for the photo.
-                                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-                                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                                            PlacePhotoResponse photo = task.getResult();
-                                            Bitmap bitmap = photo.getBitmap();
-                                            bucketListItem.setCityPicture(bitmap);
-
-                                            if (isRec) {
-                                                DummyBucketListItems.addSuggestion(bucketListItem);
-                                            } else {
-                                                doNext(bucketListItem, count, results.length());
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
     private void doNext(final BucketListItem bucketListItem, final int[] count, final int max) {
 
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -315,8 +226,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                         JSONObject jsonObject = new JSONObject(responseBody.string());
-                        if (jsonObject.has("success") && jsonObject.getBoolean("success")) {
-                            bucketListItem.setDuration(Integer.parseInt(jsonObject.getString("duration")));
+                        if (false && jsonObject.has("success") && jsonObject.getBoolean("success")) {
                             bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
                             bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("end_date")));
 
@@ -355,7 +265,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Go to the next activity here
                         // pass in user id
                         count[0]++;
-                        if (count[0] == max - 1) {
+                        if (true || count[0] == max - 1) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -379,6 +289,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    ;
+
     private boolean isEmailValid(String email) {
         return true;
     }
@@ -394,6 +306,102 @@ public class LoginActivity extends AppCompatActivity {
     private void showProgress(final boolean show) {
         mProgressView.setIndeterminate(true);
         mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    public class CustomCallback implements Callback {
+
+        public boolean isRec = false;
+
+        public void setRec(boolean rec) {
+            isRec = rec;
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onResponse(final Call call, Response response) throws IOException {
+            try (ResponseBody responseBody = response.body()) {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                JSONObject jsonObject = new JSONObject(responseBody.string());
+                final JSONArray results = jsonObject.getJSONArray("results");
+                final int[] count = {0};
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject result = results.getJSONObject(i);
+                    int duration = result.getInt("duration");
+                    String endCity = result.getString("end_city");
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                    try {
+                        Date endDate = simpleDateFormat.parse(result.getString("end_date"));
+                        Date startDate = simpleDateFormat.parse(result.getString("start_date"));
+
+                        final BucketListItem bucketListItem = new BucketListItem();
+                        bucketListItem.setDuration(duration);
+                        bucketListItem.setEndCity(endCity);
+                        bucketListItem.setUserSetEndDate(endDate);
+                        bucketListItem.setUserSetStartDate(startDate);
+
+                        // Picture
+                        if (!result.has("place_id")) {
+                            if (isRec) {
+                                bucketListItem.setStartDate(new Date());
+                                bucketListItem.setEndDate(new Date());
+                                bucketListItem.setPrice(0);
+                                DummyBucketListItems.addSuggestion(bucketListItem);
+                            } else {
+                                doNext(bucketListItem, count, results.length());
+                            }
+                        } else {
+                            String placeId = result.getString("place_id");
+
+                            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+                            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+                                @Override
+                                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                                    // Get the list of photos.
+                                    PlacePhotoMetadataResponse photos = task.getResult();
+                                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                                    // Get the first photo in the list.
+                                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                                    // Get the attribution text.
+                                    CharSequence attribution = photoMetadata.getAttributions();
+                                    // Get a full-size bitmap for the photo.
+                                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                                            PlacePhotoResponse photo = task.getResult();
+                                            Bitmap bitmap = photo.getBitmap();
+                                            bucketListItem.setCityPicture(bitmap);
+                                            bucketListItem.setStartDate(new Date());
+                                            bucketListItem.setEndDate(new Date());
+                                            bucketListItem.setPrice(0);
+
+                                            if (isRec) {
+                                                DummyBucketListItems.addSuggestion(bucketListItem);
+                                            } else {
+                                                doNext(bucketListItem, count, results.length());
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 
