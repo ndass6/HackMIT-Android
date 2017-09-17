@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                                             int duration = result.getInt("duration");
                                             String endCity = result.getString("end_city");
 
-                                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+                                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                                             try {
                                                 Date endDate = simpleDateFormat.parse(result.getString("end_date"));
                                                 Date startDate = simpleDateFormat.parse(result.getString("start_date"));
@@ -263,7 +263,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doNext(final BucketListItem bucketListItem, final int[] count, final int max) {
 
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd", Locale.US);
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         try {
             String startCity = URLEncoder.encode(LoginActivity.startCity, "UTF-8");
             String endCity = URLEncoder.encode(bucketListItem.getEndCity(), "UTF-8");
@@ -291,32 +291,39 @@ public class LoginActivity extends AppCompatActivity {
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                         JSONObject jsonObject = new JSONObject(responseBody.string());
-                        bucketListItem.setDuration(Integer.parseInt(jsonObject.getString("duration")));
-                        bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
-                        bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("end_date")));
+                        if (jsonObject.has("success") && jsonObject.getBoolean("success")) {
+                            bucketListItem.setDuration(Integer.parseInt(jsonObject.getString("duration")));
+                            bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("start_date")));
+                            bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("end_date")));
 
-                        List<Flight> flights = new ArrayList<Flight>();
-                        JSONObject departureFlightJson = jsonObject.getJSONObject("departure_flight");
-                        Flight flight1 = new Flight();
-                        flight1.setPrice(Integer.parseInt(departureFlightJson.getString("price").split(".")[0]));
-                        flight1.setDepartDate(simpleDateFormat.parse(departureFlightJson.getString("departure_date")));
-                        flight1.setArrivalAirport(departureFlightJson.getString("destination"));
-                        flight1.setAirline(departureFlightJson.getString("airline"));
-                        flights.add(flight1);
+                            List<Flight> flights = new ArrayList<Flight>();
+                            JSONObject departureFlightJson = jsonObject.getJSONObject("departure_flight");
+                            Flight flight1 = new Flight();
+                            flight1.setPrice(Integer.parseInt(departureFlightJson.getString("price").split(".")[0]));
+                            flight1.setDepartDate(simpleDateFormat.parse(departureFlightJson.getString("departure_date")));
+                            flight1.setArrivalAirport(departureFlightJson.getString("destination"));
+                            flight1.setAirline(departureFlightJson.getString("airline"));
+                            flights.add(flight1);
 
-                        JSONObject returnFlightJson = jsonObject.getJSONObject("return_flight");
-                        Flight flight2 = new Flight();
-                        flight2.setPrice(Integer.parseInt(returnFlightJson.getString("price").split(".")[0]));
-                        flight2.setDepartDate(simpleDateFormat.parse(returnFlightJson.getString("departure_date")));
-                        flight2.setArrivalAirport(returnFlightJson.getString("destination"));
-                        flight2.setAirline(returnFlightJson.getString("airline"));
-                        flights.add(flight2);
+                            JSONObject returnFlightJson = jsonObject.getJSONObject("return_flight");
+                            Flight flight2 = new Flight();
+                            flight2.setPrice(Integer.parseInt(returnFlightJson.getString("price").split(".")[0]));
+                            flight2.setDepartDate(simpleDateFormat.parse(returnFlightJson.getString("departure_date")));
+                            flight2.setArrivalAirport(returnFlightJson.getString("destination"));
+                            flight2.setAirline(returnFlightJson.getString("airline"));
+                            flights.add(flight2);
 
-                        flight1.setDepartAirport(returnFlightJson.getString("destination"));
-                        flight2.setDepartAirport(departureFlightJson.getString("destination"));
+                            flight1.setDepartAirport(returnFlightJson.getString("destination"));
+                            flight2.setDepartAirport(departureFlightJson.getString("destination"));
 
-                        bucketListItem.setPrice(flight1.getPrice() + flight2.getPrice());
-                        bucketListItem.setFlightInfo(flights);
+                            bucketListItem.setPrice(flight1.getPrice() + flight2.getPrice());
+                            bucketListItem.setFlightInfo(flights);
+                        } else {
+                            bucketListItem.setStartDate(new Date());
+                            bucketListItem.setEndDate(new Date());
+                            bucketListItem.setPrice(-1);
+                            bucketListItem.setFlightInfo(new ArrayList<Flight>());
+                        }
                         // Do the rest of the stuff
                         DummyBucketListItems.addItem(bucketListItem);
 

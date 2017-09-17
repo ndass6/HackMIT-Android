@@ -69,7 +69,7 @@ public class ViewBucketActivity extends AppCompatActivity {
     }
 
     private String dateToString(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/YYYY", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy", Locale.US);
         return simpleDateFormat.format(date);
     }
 }

@@ -61,7 +61,7 @@ public class EditBucketActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/YYYY", Locale.US);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy", Locale.US);
                 try {
                     Date startDate = simpleDateFormat.parse(startDateView.getText().toString());
                     Date endDate = simpleDateFormat.parse(endDateView.getText().toString());
@@ -75,7 +75,7 @@ public class EditBucketActivity extends AppCompatActivity {
 
                 bucket.setDuration(Integer.parseInt(dayView.getText().toString()));
 
-                SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("YYYY-MM-dd");
+                SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
 
                 // TODO save item to api
                 OkHttpClient client = new OkHttpClient();
@@ -110,7 +110,7 @@ public class EditBucketActivity extends AppCompatActivity {
     }
 
     private String dateToString(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/YYYY", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy", Locale.US);
         return simpleDateFormat.format(date);
     }
 }

@@ -1,7 +1,5 @@
 package com.tejunareddy.hackmit2017.bucketlist.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tejunareddy.hackmit2017.bucketlist.R;
-import com.tejunareddy.hackmit2017.bucketlist.activity.EditBucketActivity;
-import com.tejunareddy.hackmit2017.bucketlist.activity.ViewBucketActivity;
 import com.tejunareddy.hackmit2017.bucketlist.fragment.BucketListItemFragment.OnListFragmentInteractionListener;
 import com.tejunareddy.hackmit2017.bucketlist.fragment.dummy.DummyBucketListItems;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
@@ -104,7 +100,7 @@ public class MyBucketListItemRecyclerViewAdapter extends RecyclerView.Adapter<My
     }
 
     private String dateToString(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/YYYY", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy", Locale.US);
         return simpleDateFormat.format(date);
     }
 

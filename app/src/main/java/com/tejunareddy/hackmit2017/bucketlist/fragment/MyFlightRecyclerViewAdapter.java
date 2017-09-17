@@ -58,7 +58,7 @@ public class MyFlightRecyclerViewAdapter extends RecyclerView.Adapter<MyFlightRe
         });
     }
     private String dateToString(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/YYYY", Locale.US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy", Locale.US);
         return simpleDateFormat.format(date);
     }
 

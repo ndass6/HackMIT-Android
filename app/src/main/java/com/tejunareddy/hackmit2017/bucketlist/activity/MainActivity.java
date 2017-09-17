@@ -162,7 +162,9 @@ public class MainActivity extends AppCompatActivity implements BucketListItemFra
     @Override
     protected void onResume() {
         super.onResume();
-        bucketListItemFragment.notifyChange();
+        if (bucketListItemFragment != null) {
+            bucketListItemFragment.notifyChange();
+        }
     }
 
 
