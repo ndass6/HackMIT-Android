@@ -47,6 +47,7 @@ public class DummyBucketListItems {
         flight.setDepartAirport(place.getName().toString());
         flight.setDepartDate(new Date());
         flight.setPrice(50);
+        flights.add(flight);
         bucketListItem.setFlightInfo(flights);
 
         return bucketListItem;

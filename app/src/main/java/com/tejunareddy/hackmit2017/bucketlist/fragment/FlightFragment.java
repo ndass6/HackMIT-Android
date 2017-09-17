@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tejunareddy.hackmit2017.bucketlist.R;
-import com.tejunareddy.hackmit2017.bucketlist.dummy.DummyContent;
-import com.tejunareddy.hackmit2017.bucketlist.dummy.DummyContent.DummyItem;
 import com.tejunareddy.hackmit2017.bucketlist.model.BucketListItem;
 import com.tejunareddy.hackmit2017.bucketlist.model.Flight;
 
