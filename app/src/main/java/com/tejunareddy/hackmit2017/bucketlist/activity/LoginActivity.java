@@ -252,9 +252,9 @@ public class LoginActivity extends AppCompatActivity {
                                 flights.add(flight1);
 
                                 if (i == 0) {
-                                    bucketListItem.setStartDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
+                                    bucketListItem.setStartDate(simpleDateFormat.parse(flightJson.getString("departure_date")));
                                 } else if (i == 1) {
-//                                    bucketListItem.setEndDate(simpleDateFormat.parse(jsonObject.getString("departure_date")));
+                                    bucketListItem.setEndDate(simpleDateFormat.parse(flightJson.getString("departure_date")));
 
                                 }
                             }
@@ -356,7 +356,7 @@ public class LoginActivity extends AppCompatActivity {
                         bucketListItem.setUserSetStartDate(startDate);
 
                         // Picture
-                        if (!result.has("place_id")) {
+                        if (true) {
                             if (isRec) {
                                 bucketListItem.setStartDate(new Date());
                                 bucketListItem.setEndDate(new Date());
