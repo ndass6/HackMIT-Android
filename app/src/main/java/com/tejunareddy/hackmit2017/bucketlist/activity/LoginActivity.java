@@ -19,11 +19,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * A login screen that offers login via email/password.
@@ -110,30 +113,49 @@ public class LoginActivity extends AppCompatActivity {
                     .post(body)
                     .build();
 
-            Response response = null;
-            try {
-                // Json parsing here
-                response = client.newCall(request).execute();
-                JSONObject jsonObject = new JSONObject(response.body().string());
-                boolean success = jsonObject.getBoolean("success");
-
-                showProgress(false);
-                if (success) {
-                    // Go to the next activity here
-                    // FIXME pass in user id
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    mPasswordView.setError("Incorrect login information");
-                    mPasswordView.requestFocus();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try (ResponseBody responseBody = response.body()) {
+                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        boolean success = jsonObject.getBoolean("success");
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showProgress(false);
+                            }
+                        });
+                        if (success) {
+                            // Go to the next activity here
+                            // pass in user id
+                            int userId = jsonObject.getInt("user_id");
+
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("USER_ID", userId);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mPasswordView.setError("Incorrect login information");
+                                    mPasswordView.requestFocus();
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
